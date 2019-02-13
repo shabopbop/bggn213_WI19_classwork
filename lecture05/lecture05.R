@@ -2,6 +2,7 @@
 #' title: "Practice Plots"
 #' author: "John Jacob Jingleheimer Schmidt"
 #' date: "Janurary 25, 2019"
+#' output: github_document
 #' ---
 
 #' *I guess we aren't playing with this feature too much*
