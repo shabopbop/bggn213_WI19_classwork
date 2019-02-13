@@ -1,0 +1,184 @@
+---
+title: "Lecture09"
+author: "Joseph Miller"
+date: "2/8/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Read our input data
+
+```{r}
+#Save your input data file to a new 'data' directory
+fna.data<- "WisconsinCancer.csv"
+
+# Complete the following code to input the data and store as wisc.df
+wisc.df<- read.csv(fna.data)
+```
+
+# Double check your data
+
+```{r}
+head(wisc.df)
+```
+
+# Looks like there is a funyy last col"X". Let's check how many samples and features (i.e. patients and cols respectively) there are.
+
+```{r}
+# number of patients
+nrow(wisc.df)
+
+# number of features
+ncol(wisc.df)
+```
+
+Change the data. Take cols 3-32 for further analysis (drop x and M/B diagnosis)
+
+```{r}
+wisc.data <- wisc.df[,3:32]
+head(wisc.data)
+```
+
+Add patient ID as row names
+
+```{r}
+rownames(wisc.data)<- wisc.df$id
+
+wisc.data
+```
+
+Q: how many M vs B diagnosis
+
+```{r}
+table(wisc.df$diagnosis)
+```
+
+Q: how many features are "_mean" values
+
+```{r}
+#colnames(wisc.data)
+inds<-grep("_mean", colnames(wisc.data))
+
+length(grep("_mean", colnames(wisc.data)))
+
+colnames(wisc.data)[inds]
+```
+
+
+PCA
+
+```{r}
+#colMeans(wisc.data)
+
+round(apply(wisc.data, 2, sd),2)
+```
+
+We need some scaling 
+
+## Principal Component Analysis
+
+```{r}
+wisc.pr<-prcomp(wisc.data, scale=T)
+
+diagnosis <- as.numeric(wisc.df[,2])
+
+summary(wisc.pr)
+plot(wisc.pr$x[,1], wisc.pr$x[,2], col=as.numeric(diagnosis), xlab="PC1", ylab="PC2")
+```
+
+```{r}
+pr.var<-wisc.pr$sdev^2
+sum(pr.var)
+
+w<- pr.var/sum(pr.var) * 100
+
+round(w, 2)
+
+plot(w, main="Scree plot", xlab= "PC", ylab= "Varience", type="o")
+```
+
+
+```{r}
+
+#Axis = flase, allows to make own axis.
+#names.arg= paste type of name on x axis
+barplot(w, ylab = "Precent of Variance Explained",
+     names.arg=paste0("PC",1:length(w)), las=2, axes = FALSE)
+
+axis(2, round(w))
+```
+
+
+```{r}
+d<-dist(wisc.pr$x[,c(1,2)])
+
+hd<-hclust(d, method = "ward.D2")
+plot(hd)
+```
+
+
+Cut tree into 3 groups/ clusters
+
+```{r}
+grp3<- cutree(hd, k=3)
+table(grp3, diagnosis)
+
+
+```
+
+
+```{r}
+plot(wisc.pr$x[,1], wisc.pr$x[,2], col=grp3, xlab="PC1", ylab="PC2")
+```
+
+Cross tabulation
+
+```{r}
+diagnosis<- wisc.df$diagnosis == "M"
+table(grp3, diagnosis)
+```
+
+
+
+```{r}
+new.d<-read.csv("https://tinyurl.com/new-samples-CSV")
+
+npc<-predict(wisc.pr, new.d)
+
+plot(wisc.pr$x[,1:2], col=grps)
+points(npc[,1], npc[,2], col="blue", pch=16)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

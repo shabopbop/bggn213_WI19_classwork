@@ -1,0 +1,186 @@
+---
+title: "IDK"
+author: "Joseph Miller"
+date: "2/6/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+# Generate some example data for clustering
+tmp <- c(rnorm(30,-3), rnorm(30,3))
+x <- cbind(x=tmp, y=rev(tmp))
+plot(x)
+```
+
+
+```{r}
+km<- kmeans(x, centers = 2, nstart=20)
+km
+```
+
+use $ to get to the components
+
+```{r}
+km$cluster
+```
+
+```{r}
+plot(x, col=km$cluster)
+points(km$centers, col="purple", pch=15, cex=2)
+```
+
+## Hierarchical clustering 
+
+```{r}
+# First we need to calculate point (dis)similarity
+# as the Euclidean distance between observations
+dist_matrix <- dist(x)
+# The hclust() function returns a hierarchical
+# clustering model
+hc <- hclust(d = dist_matrix)
+# the print method is not so useful here
+hc 
+```
+
+```{r}
+plot(hc)
+abline(h=6, col=5)
+grp2<-cutree(hc, h=6)
+grp3<-cutree(hc, h=2.5) # Can use k groups as an argument to cut the tree
+```
+
+
+```{r}
+plot(x, col=grp2)
+plot(x, col=grp3)
+table(grp3)
+```
+
+
+```{r}
+# Using different hierarchical clustering methods
+hc.complete <- hclust(dist_matrix, method="complete")
+hc.average <- hclust(dist_matrix, method="average")
+hc.single <- hclust(dist_matrix, method="single")
+
+plot(hc.complete)
+plot(hc.average)
+plot(hc.single)
+```
+
+Made up overlapping data- a bit more real life like 
+```{r}
+# Step 1. Generate some example data for clustering
+w <- rbind(
+ matrix(rnorm(100, mean=0, sd = 0.3), ncol = 2), # c1
+ matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2), # c2
+ matrix(c(rnorm(50, mean = 1, sd = 0.3), # c3
+ rnorm(50, mean = 0, sd = 0.3)), ncol = 2))
+colnames(w) <- c("x", "y")
+# Step 2. Plot the data without clustering
+plot(w)
+# Step 3. Generate colors for known clusters
+# (just so we can compare to hclust results)
+col <- as.factor( rep(c("c1","c2","c3"), each=50) )
+plot(w, col=col)
+
+
+
+```
+
+```{r}
+h<-hclust(dist(w))
+plot(h)
+h2<- cutree(h, k=3)
+plot(w, col=h2)
+h3<- cutree(h, k=4)
+plot(w, col=h3)
+```
+
+# Principal Component Analysis (PCA)
+
+```{r}
+mydata <- read.csv("https://tinyurl.com/expression-CSV",
+ row.names=1)
+
+## lets do PCA
+pca <- prcomp(t(mydata), scale=TRUE) 
+summary(pca)
+```
+
+Make first PCA plot
+
+```{r}
+dim(pca$x)
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab = "PC2")
+```
+
+```{r}
+## Precent variance is often more informative to look at
+pca.var <- pca$sdev^2
+pca.var.per <- round(pca.var/sum(pca.var)*100, 1)
+pca.var.per
+```
+
+```{r}
+barplot(pca.var.per, main="Scree Plot",
+ xlab="Principal Component", ylab="Percent Variation")
+```
+
+Make our PCA plot pretty
+```{r}
+## A vector of colors for wt and ko samples
+colvec <- as.factor( substr( colnames(mydata), 1, 2) )
+plot(pca$x[,1], pca$x[,2], col=colvec, pch=16,
+ xlab=paste0("PC1 (", pca.var.per[1], "%)"),
+ ylab=paste0("PC2 (", pca.var.per[2], "%)")) 
+```
+
+Assign row names from the first col of the data upon reading . This is a safer approach
+```{r}
+x <- read.csv("UK_foods.csv", row.names=1)
+
+dim(x)
+
+barplot(as.matrix(x), beside=F, col=rainbow(nrow(x)))
+
+pairs(x, col=rainbow(10), pch=16)
+
+# Use the prcomp() PCA function 
+pca <- prcomp( t(x) )
+summary(pca)
+
+# Plot PC1 vs PC2
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500), col=rainbow(4))
+text(pca$x[,1], pca$x[,2], colnames(x), col = rainbow(4))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

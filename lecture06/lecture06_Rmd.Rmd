@@ -1,0 +1,116 @@
+---
+title: "lecture06_R_Functions"
+author: "Joseph Miller"
+date: "1/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## File reading
+
+use **read.table()** and friends to input some example data into R
+
+Insert code chunch
+
+```{r}
+read.csv("https://bioboot.github.io/bggn213_S18/class-material/test1.txt")
+```
+
+```{r}
+file.1<- "https://bioboot.github.io/bggn213_S18/class-material/test1.txt"
+
+read.csv(file.1)
+```
+
+```{r}
+file.2<- "https://bioboot.github.io/bggn213_S18/class-material/test2.txt"
+read.table(file.2, header=TRUE, sep= "$")
+```
+
+```{r}
+file.3<- "https://bioboot.github.io/bggn213_S18/class-material/test3.txt"
+read.table(file.3)
+```
+
+
+
+## R functions
+
+```{r}
+add <- function(x, y=1) {
+ # Sum the input x and y
+ x + y
+}
+```
+
+using add function
+
+```{r}
+add(4)
+add(3,7)
+add(c(1, 4, 5, 6))
+```
+
+```{r}
+rescale <- function(x) {
+ rng <-range(x)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+```{r}
+rescale(1:1000)
+```
+
+```{r}
+rescale2 <- function(x) {
+ rng <-range(x, na.rm=TRUE)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+
+```{r}
+rescale2( c(1,2,NA,3,10) )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Stuff
+
+```{r}
+rescale3 <- function(x, na.rm=TRUE, plot=FALSE) {
+ if(na.rm) {
+ rng <-range(x, na.rm=na.rm)
+ } else {
+ rng <-range(x)
+ }
+ print("Hello")
+ answer <- (x - rng[1]) / (rng[2] - rng[1])
+ print("is it me you are looking for?")
+ if(plot) {
+ plot(answer, typ="b", lwd=4)
+ }
+ print("I can see it in ...")
+}
+```
+
+```{r}
+rescale3(1:10, plot=TRUE)
+```
+

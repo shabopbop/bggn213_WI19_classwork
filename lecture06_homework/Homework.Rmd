@@ -1,0 +1,77 @@
+---
+title: "Homework"
+author: "Joseph Miller"
+date: "1/25/2019"
+output: html_document
+---
+
+```{r}
+library(bio3d)
+```
+
+**What this function does:** This function "pott" takes in and reads PDB file vectors, applies parameters for specific analysis of a dataset, and then plots the drug interaction data. I attempted to have it plot all three data from the files in one graph, but could not get it to work.
+
+```{r}
+# Function name
+pott<- function(file, chain, elety, factor) {
+ 
+  
+# Color of the plots in the output graph
+   palette<- c("red", "dark green", "light blue")
+  
+#For loop to allow the files to be iterated through the file vector
+  for (i in 1:length(file)){
+    s11<- read.pdb(file[i])
+    
+    s11.chain<- trim.pdb(s11, chain="A", elety="CA")
+    s11.b<- s11.chain$atom
+    s11.factor<- s11.b[,factor]
+    
+# if conditional to create the first plot, and else to create the plots after that    
+    if(i==1){
+      plotb3(s11.factor, sse=s11.chain, typ="l", ylab="Bfactor", "factor", col=palette[i])
+    }else{
+      line(s11.factor, col=palete[i])
+    }
+  }
+}
+```
+
+```{r}
+# Vector parameters. I could never get this to work with all three files together in one vector. But you can get it to work one file at a time.
+file<- "4AKE"
+file.2<- "1AKE"
+file.3<-"1E4Y"
+chain<- "A"
+elety<- "CA"
+factor<- "b"
+```
+
+```{r}
+pott(file, chain, elety, factor)
+pott(file.2, chain, elety, factor)
+pott(file.3, chain, elety, factor)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

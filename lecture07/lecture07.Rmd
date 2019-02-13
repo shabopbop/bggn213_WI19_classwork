@@ -1,0 +1,134 @@
+---
+title: "Lecture07"
+author: "Joseph Miller"
+date: "1/30/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Functions Revisited
+
+load(i.e. **source**) our rescale() function from last day
+
+```{r}
+source("http://tinyurl.com/rescale-R")
+```
+
+Test this function
+
+```{r}
+rescale(1:5)
+```
+
+```{r}
+rescale(c(1:5, "string"))
+```
+
+We want to make this fucntion more robust to these types of errors
+
+```{r}
+rescale2(c(1:5, "string"))
+```
+
+```{r}
+is.numeric(1:5)
+```
+
+```{r}
+is.numeric("string")
+```
+
+```{r}
+!is.numeric(c(1:5, "string"))
+```
+
+```{r}
+x <- c( 1, 2, NA, 3, NA)
+y <- c(NA, 3, NA, 3, 4)
+
+#which(is.na(x) & is.na(y))
+sum(is.na(x) & is.na(y))
+```
+
+```{r}
+both_na <- function(x,y){
+  #check for NA element in both input vectors
+  sum(is.na(x) & is.na(y))
+}
+```
+
+```{r}
+both_na(x,y)
+```
+
+```{r}
+x <- c(NA, NA, NA)
+y1 <- c( 1, NA, NA)
+y2 <- c( 1, NA, NA, NA)
+y3<- c(1, NA, NA, NA, NA)
+
+# What will this return?
+both_na(x, y2)
+both_na(x, y3)
+
+# Example of x recycling
+```
+
+```{r}
+both_na2 <- function(x, y) {
+ if(length(x) != length(y)) {
+ stop("Input x and y should be the same length")
+ }
+ sum( is.na(x) & is.na(y) )
+}
+
+both_na2(x,y3)
+```
+
+Polishing time!
+
+```{r}
+both_na3 <- function(x, y) {
+ if(length(x) != length(y)) {
+ stop("Input x and y should be vectors of the same length")
+ }
+
+ na.in.both <- ( is.na(x) & is.na(y) )
+ na.number <- sum(na.in.both)
+ na.which <- which(na.in.both)
+ message("Found ", na.number, " NA's at position(s):",
+ paste(na.which, collapse=", ") )
+
+ return( list(number=na.number, which=na.which) )
+}
+
+both_na3(x,y1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
