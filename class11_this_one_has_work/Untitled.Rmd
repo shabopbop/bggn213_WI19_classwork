@@ -1,0 +1,144 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+DES<-read.csv("Data Export Summary.csv", row.names= 1)
+```
+
+```{r}
+pre.by.method<-DES$Total/sum(DES$Total) * 100
+names(pre.by.method) <- rownames(DES)
+pre.by.method
+
+```
+
+```{r}
+PBM<-sum(DES$Proteins)/sum(DES$Total) * 100
+names(PBM)<- "% Protein"
+PBM
+```
+
+
+```{r}
+library(bio3d)
+```
+
+## Section 3 of hands on
+
+```{r}
+pdb <- read.pdb("1hsg.pdb")
+pdb
+```
+
+
+
+```{r}
+# The 'devtools' package allows us to install development versions
+install.packages("devtools")
+
+# Install the bio3d.view package from bitbucket
+devtools::install_bitbucket("Grantlab/bio3d-view")
+```
+
+
+```{r}
+# Load the package
+library("bio3d.view")
+# view the 3D structure
+view(pdb, "overview", col="sse")
+
+```
+
+
+extract the protein only portion ofthis PDB structure and write it out to a new PDB file.
+
+Extract the ligand (i.e. drug)
+
+
+```{r}
+# Select all C-alpha atoms (return their indices)
+ca.inds <- atom.select(pdb, "ligand")
+ca.inds
+prot.inds<- atom.select(pdb, "protein")
+prot.inds
+
+```
+
+
+```{r}
+head(ca.inds$atom)
+pdb$atom[ca.inds$atom,]
+pdb$atom[prot.inds$atom,]
+```
+
+
+```{r}
+ligand.pdb <-trim.pdb(pdb, ca.inds)
+protein.pdb <-trim.pdb(pdb, prot.inds)
+library(rgl)
+view(ligand.pdb)
+view(protein.pdb)
+```
+
+```{r}
+write.pdb(ligand.pdb, file= "ligand.pdb")
+write.pdb(protein.pdb, file= "protein.pdb")
+```
+
+
+```{r}
+# Load the package
+pdb.2 <- read.pdb("1hel")
+# Normal mode analysis calculation
+modes <- nma(pdb.2)
+m7 <- mktrj(modes,
+ mode=7,
+ file="mode_7.pdb.2")
+view(m7, col=vec2color( rmsf(m7) ))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
