@@ -39,7 +39,7 @@ pdb
 
 
 
-```{r}
+```{r eval=FALSE}
 # The 'devtools' package allows us to install development versions
 install.packages("devtools")
 

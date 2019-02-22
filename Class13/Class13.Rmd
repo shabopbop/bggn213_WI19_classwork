@@ -1,0 +1,90 @@
+---
+title: "Class 13: Genome Informatics 1"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+mxl<- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv")
+table(mxl)
+```
+
+```{r}
+genotypes<- mxl$Genotype..forward.strand.
+table(genotypes)
+```
+
+## FASTQ quality scores
+
+```{r}
+#install.packages("seqinr")
+#install.packages("gtools")
+
+library(seqinr)
+library(gtools)
+chars <- s2c("DDDDCDEDCDDDDBBDDDCC@")
+chars
+phred <- asc( chars ) - 33
+phred 
+```
+
+##Read the final from the worksheet we did in class today
+
+```{r}
+expr<- read.table("rs8067378_ENSG00000172057.6.txt", sep="")
+```
+
+```{r}
+table(expr$geno)
+```
+
+```{r}
+inds.gg<-expr$geno=="G/G"
+a<-summary(expr[inds.gg, "exp"])
+```
+
+
+```{r}
+inds.ag<-expr$geno=="A/G"
+b<-summary(expr[inds.ag, "exp"])
+```
+
+
+```{r}
+inds.aa<-expr$geno=="A/A"
+c<-summary(expr[inds.aa, "exp"])
+```
+
+```{r}
+boxplot(exp ~ geno,data=expr, notch=T)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

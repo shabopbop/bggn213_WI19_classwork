@@ -1,0 +1,92 @@
+---
+title: "Class12"
+author: "Joseph Miller"
+date: "2/20/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Clean up our protein target structure
+
+First we download a target (i.e. protein receptor) structure from the main PDB database. We will pick PDB ID "1hsg"
+
+```{r}
+library(bio3d)
+file.name <- get.pdb("1hsg")
+```
+
+Extract the protein only segment of this PDB entry and write out a new PDB format file. We will also do the same for the bound ligand.
+
+```{r}
+hiv <- read.pdb(file.name)
+```
+
+```{r}
+hiv
+```
+
+Protein extraction from data
+
+```{r}
+prot<- trim.pdb(hiv, "protein")
+prot
+```
+
+```{r}
+write.pdb(prot, file="1hsg_protein.pdb")
+```
+
+repeat for ligand
+
+```{r}
+ligand<- trim.pdb(hiv, "ligand")
+ligand
+```
+
+```{r}
+write.pdb(ligand, file="1hsg_ligand.pdb")
+```
+
+alternatively, in line 38 ish, could use prot.file.name<-paste(pdb.code, "_protein.pdb", sep="") then repeat for ligand
+
+
+## Convert our docking results for viewing in VMD
+
+```{r}
+res <- read.pdb("all.pdbqt", multi= TRUE)
+res
+```
+
+```{r}
+write.pdb(res, file="results.pdb")
+```
+
+
+```{r}
+# res <- read.pdb("all.pdbqt", multi=TRUE)
+ori <- read.pdb("ligand.pdbqt")
+rmsd(ori, res)
+```
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
