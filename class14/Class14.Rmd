@@ -186,13 +186,11 @@ dds
 dds <- DESeq(dds)
 ```
 
-```{r}
-res<- DESeq(dds)
-res
-```
+
 
 
 ```{r}
+res <- results(dds)
 summary(res)
 ```
 
@@ -211,6 +209,7 @@ plot( res$log2FoldChange,  -log(res$padj),
 abline(v=c(-2,2), col="gray", lty=2)
 abline(h=-log(0.1), col="gray", lty=2)
 ```
+
 
 
 
