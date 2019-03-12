@@ -26,6 +26,7 @@ head(colData)
 ```{r}
 countData = read.csv(countFile, row.names=1)
 head(countData)
+countData$ENSG00000186092
 ```
 
 
@@ -187,16 +188,18 @@ gobpres = gage(foldchanges, gsets=gobpsets, same.dir=TRUE)
 lapply(gobpres, head)
 ```
 
+```{r}
+sig_genes <- res[res$padj <= 0.05 & !is.na(res$padj), "symbol"]
+print(paste("Total number of significant genes:", length(sig_genes)))
+## [1] "Total number of significant genes: 8149"
+write.table(sig_genes, file="significant_genes.txt", row.names=FALSE, col.names=FALSE, quote=FALSE)
+```
 
 
 
-
-
-
-
-
-
-
+```{r}
+c("a", 1, TRUE)
+```
 
 
 
