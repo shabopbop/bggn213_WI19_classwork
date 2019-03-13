@@ -36,6 +36,6 @@ cons.seq<-consensus(aln.seq)
 b.data<-blast.pdb(cons.seq$seq)
 ```
 
-    ##  Searching ... please wait (updates every 5 seconds) RID = 8G2VJD6K014 
+    ##  Searching ... please wait (updates every 5 seconds) RID = 8G34TMJ5014 
     ##  .
     ##  Reporting 100 hits
